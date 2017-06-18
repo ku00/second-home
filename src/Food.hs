@@ -4,7 +4,9 @@
 
 module Food
   ( Food(..)
+  , CRUD
   , foods
+  , food
   ) where
 
 import Data.Aeson
@@ -21,6 +23,9 @@ data Food = Food
 
 $(deriveJSON defaultOptions ''Food)
 
+type CRUD = "foods" :> Get '[JSON] [Food]
+       :<|> "food" :> Capture "id" Int :> Get '[JSON] Food
+
 foods :: [Food]
 foods = [ Food 1 "Nirareba Itame" 860
         , Food 2 "Moyashi to Nirareba Itame" 860
@@ -28,3 +33,6 @@ foods = [ Food 1 "Nirareba Itame" 860
         , Food 4 "Butareba Itame" 860
         , Food 5 "Butaniku to Ninniku no Meitame" 860
         ]
+
+food :: Int -> Food
+food fid = head $ filter (\(Food fid' _ _) -> fid == fid') foods
